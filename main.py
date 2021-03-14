@@ -21,7 +21,20 @@ def training(prof):
     else:
         params['prof_text'] = 'Научные симуляторы'
         params['prof_image'] = url_for('static', filename='img/doc_or_eng/doc.jpg')
-    return render_template('index.html', **params)
+    return render_template('training.html', **params)
+
+
+@app.route('/list_prof/<name>')
+def list_prof(name):
+    params = {
+        'list': name,
+        'lst_prof': ['инженер-исследователь', 'пилот', 'строитель',
+                     'экзобиолог', 'врач', 'инженер по терраформированию',
+                     'климатолог', 'специалист по радиационной защите',
+                     'астрогеолог', 'гляциолог', 'инженер жизнеобеспечения',
+                     'метеоролог', 'оператор марсохода', 'киберинженер', 'штурман', 'пилот дронов']
+    }
+    return render_template('list_prof.html', **params)
 
 
 if __name__ == '__main__':

@@ -1,2 +1,0 @@
-.code-mirror{height:calc(100% - 43px);min-height:inherit}.code-mirror .code-mirror__textarea{display:none}.code-mirror .CodeMirror{height:100%;min-height:inherit;background-color:var(--color-background-panel);font-family:var(--fira-mono);font-size:12px}.code-mirror .CodeMirror-scroll{min-height:inherit;-ms-scroll-chaining:none;overscroll-behavior:contain}.code-mirror .CodeMirror-gutters{background-color:var(--color-background-panel)}.code-mirror .CodeMirror-lines{padding:8px 0}
-
