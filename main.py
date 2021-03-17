@@ -1,6 +1,6 @@
 from flask import Flask, url_for, render_template, redirect
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 
 
@@ -95,6 +95,15 @@ def table_prof(name, age):
     return render_template('table_param.html', color=color, name=url_for('static', filename='img/sim/male_child.jpg'))
 
 
+class GaleryForm(FlaskForm):
+    file = SubmitField('Выберите файл')
+    send = SubmitField('Отправить')
+
+
+@app.route('/galery')
+def galery():
+    form = GaleryForm()
+    render_template('galery.html', form=form)
 
 if __name__ == '__main__':
     app.run(port=8081, host='127.0.0.1')
