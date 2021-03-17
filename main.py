@@ -74,6 +74,12 @@ def login():
     return render_template('login.html', title='Аварийный доступ', form=form)
 
 
+@app.route('/distribution')
+def distribution():
+    lst = ['A', 'B', 'C', 'D']
+    return render_template('distribution.html', lst=lst)
+
+
 
 if __name__ == '__main__':
     app.run(port=8081, host='127.0.0.1')
