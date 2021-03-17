@@ -80,6 +80,21 @@ def distribution():
     return render_template('distribution.html', lst=lst)
 
 
+@app.route('/table_param/<name>/<int:age>')
+def table_prof(name, age):
+    if name == 'male':
+        if age > 21:
+            color = '#23037C'
+        else:
+            color = '#571DFC'
+    else:
+        if age < 21:
+            color = '#FF6BEF'
+        else:
+            color = '#E506C2'
+    return render_template('table_param.html', color=color, name=url_for('static', filename='img/sim/male_child.jpg'))
+
+
 
 if __name__ == '__main__':
     app.run(port=8081, host='127.0.0.1')
