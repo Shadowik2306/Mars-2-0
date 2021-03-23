@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="text-center">Works log</h1>
+<div>
+    {% for job in jobs %}
+    <div>
+        <h1>Action {{ job.id }}</h1>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Название работы</th>
+                        <th>фамилия и имя ответственного</th>
+                        <th>продолжительность в часах</th>
+                        <th>список id команды</th>
+                        <th>завершена или нет</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>{{ job.job }}</th>
+                        <th>{{ job.team_leader }}</th>
+                        <th>{{ job.work_size }} hours</th>
+                        <th>{{ job.collaborators }}</th>
+                        <th>{{ job.is_finished }}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
