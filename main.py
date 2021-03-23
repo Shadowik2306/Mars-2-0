@@ -122,8 +122,8 @@ def works_log():
     db_session.global_init('db/blogs.db')
     db_sess = db_session.create_session()
     jobs = db_sess.query(Jobs).all()
-    print(type(jobs[1].team_leader))
     return render_template('works_log.html', jobs=jobs)
+
 
 if __name__ == '__main__':
     app.run(port=8081, host='127.0.0.1')
