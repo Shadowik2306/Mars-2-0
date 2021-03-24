@@ -100,29 +100,46 @@ def table_prof(name, age):
     return render_template('table_param.html', color=color, name=url_for('static', filename='img/sim/male_child.jpg'))
 
 
-class GaleryForm(FlaskForm):
-    file = SubmitField('Выберите файл')
-    send = SubmitField('Отправить')
-
-
-@app.route('/galery', methods=['POST', 'GET'])
-def galery():
-    if request.method == 'GET':
-        form = GaleryForm()
-        return render_template('galery.html', lst=[url_for('static', filename=f'img/galery/{i}') for i in os.listdir('static/img/galery')], form = form)
-    elif request.method == 'POST':
-        f = request.files['file']
-        f.read()
-        with open(str(os.listdir('static/img/galery')) + '.jpg', 'w') as file:
-            file.write(f)
-
-
 @app.route('/')
 def works_log():
     db_session.global_init('db/blogs.db')
     db_sess = db_session.create_session()
     jobs = db_sess.query(Jobs).all()
     return render_template('works_log.html', jobs=jobs)
+
+
+class Register(FlaskForm):
+    login = StringField('Login / email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password_repeat = PasswordField('Repeat password', validators=[DataRequired()])
+    surname = StringField('Surname', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    age = StringField('Name', validators=[DataRequired()])
+    position = StringField('Speciality', validators=[DataRequired()])
+    adress = StringField('Adress', validators=[DataRequired()])
+    submit = SubmitField('Send')
+
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = Register()
+    if request.method == 'POST':
+        dct = {
+            'login': request.form['login'],
+            'password': request.form['password'],
+            'password_repeat': request.form['password_repeat'],
+            'surname': request.form['surname'],
+            'name': request.form['name'],
+            'age': request.form['age'],
+            'position': request.form['position'],
+            'adress': request.form['adress'],
+            'submit': request.form['submit']
+        }
+        if not dct["password"] == dct["password_repeat"]:
+            return "Пароли разные"
+        return "Accepted"
+    return render_template('register.html', form=form)
 
 
 if __name__ == '__main__':
