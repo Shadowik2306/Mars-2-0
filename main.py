@@ -1,6 +1,6 @@
 from flask import Flask, url_for, render_template, redirect, request
 from flask_wtf import FlaskForm
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 import os
@@ -11,6 +11,8 @@ from data.job import Jobs
 
 from forms.loginForm import LoginForm
 from forms.registrationForm import Register
+from forms.addingJob import AddingJob
+from forms.loginFormTwo import LoginFormTwo
 
 import datetime
 
@@ -22,12 +24,27 @@ login_manager.init_app(app)
 db_session.global_init('db/blogs.db')
 
 
-@app.route('/<title>')
-@app.route('/index/<title>')
-def index(title):
-    param = {}
-    param['title'] = title
-    return render_template('base.html', **param)
+@login_manager.user_loader
+def load_user(user_id):
+    db_sess = db_session.create_session()
+    return db_sess.query(User).get(user_id)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
+
+
+@app.route('/')
+def works_log():
+    if not current_user.is_authenticated:
+        return render_template('base.html')
+    db_session.global_init('db/blogs.db')
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).all()
+    return render_template('works_log.html', jobs=jobs)
 
 
 @app.route('/training/<prof>')
@@ -72,14 +89,6 @@ def answer():
     return render_template('answer.html', **params)
 
 
-class LoginFormTwo(FlaskForm):
-    username_astro = StringField('id астронавта', validators=[DataRequired()])
-    password_astro = PasswordField('Пароль астронавта', validators=[DataRequired()])
-    username_cap = StringField('id капитана', validators=[DataRequired()])
-    password_cap = PasswordField('Пароль капитана', validators=[DataRequired()])
-    submit = SubmitField('Доступ')
-
-
 @app.route('/login_two', methods=['GET', 'POST'])
 def login_two():
     form = LoginFormTwo()
@@ -109,14 +118,6 @@ def table_prof(name, age):
     return render_template('table_param.html', color=color, name=url_for('static', filename='img/sim/male_child.jpg'))
 
 
-@app.route('/')
-def works_log():
-    db_session.global_init('db/blogs.db')
-    db_sess = db_session.create_session()
-    jobs = db_sess.query(Jobs).all()
-    return render_template('works_log.html', jobs=jobs)
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = Register()
@@ -144,11 +145,6 @@ def register():
     return render_template('register.html', form=form)
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -165,11 +161,22 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect("/")
+@app.route('/addjob', methods=['GET', "POST"])
+def addjob():
+    form = AddingJob()
+    if form.validate_on_submit():
+        new_job = Jobs(
+            team_leader=form.team_led_id.data,
+            job=form.title.data,
+            work_size=form.work_size.data,
+            collaborators=form.collaborators.data,
+            is_finished=form.finished.data
+        )
+        db_sess = db_session.create_session()
+        db_sess.add(new_job)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('addjob.html', title='Adding a job', form=form)
 
 
 if __name__ == '__main__':
