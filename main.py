@@ -161,7 +161,8 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/addjob', methods=['GET', "POST"])
+@app.route('/news', methods=['GET', "POST"])
+@login_required
 def addjob():
     form = AddingJob()
     if form.validate_on_submit():
@@ -178,6 +179,29 @@ def addjob():
         return redirect('/')
     return render_template('addjob.html', title='Adding a job', form=form)
 
+
+@app.route('/news/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_news(id):
+    form = AddingJob()
+    db_sess = db_session.create_session()
+    news = db_sess.query(Jobs).filter(Jobs.id == id).first()
+    if not news:
+        return redirect('/')
+    if form.validate_on_submit():
+        news.team_leader = form.team_led_id.data
+        news.job = form.title.data
+        news.work_size = form.work_size.data
+        news.collaborators = form.collaborators.data
+        news.is_finished = form.finished.data
+        db_sess.commit()
+        return redirect('/')
+    form.title.data = news.job
+    form.team_led_id.data = news.team_leader
+    form.work_size.data = news.work_size
+    form.collaborators.data = news.collaborators
+    form.finished.data = news.is_finished
+    return render_template('addjob.html', title='Editing a job', form=form)
 
 if __name__ == '__main__':
     app.run(port=8081, host='127.0.0.1')
