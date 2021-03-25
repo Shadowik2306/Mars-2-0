@@ -1,6 +1,7 @@
 from flask import Flask, url_for, render_template, redirect, request
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, Label
+from flask_login import LoginManager, login_user, login_required, logout_user
+from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 import os
 
@@ -8,9 +9,17 @@ from data import db_session
 from data.users import User
 from data.job import Jobs
 
+from forms.loginForm import LoginForm
+from forms.registrationForm import Register
+
+import datetime
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+login_manager = LoginManager()
+login_manager.init_app(app)
+db_session.global_init('db/blogs.db')
 
 
 @app.route('/<title>')
@@ -63,7 +72,7 @@ def answer():
     return render_template('answer.html', **params)
 
 
-class LoginForm(FlaskForm):
+class LoginFormTwo(FlaskForm):
     username_astro = StringField('id астронавта', validators=[DataRequired()])
     password_astro = PasswordField('Пароль астронавта', validators=[DataRequired()])
     username_cap = StringField('id капитана', validators=[DataRequired()])
@@ -71,12 +80,12 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Доступ')
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
+@app.route('/login_two', methods=['GET', 'POST'])
+def login_two():
+    form = LoginFormTwo()
     if form.validate_on_submit():
         return redirect('/#')
-    return render_template('login.html', title='Аварийный доступ', form=form)
+    return render_template('login_two.html', title='Аварийный доступ', form=form)
 
 
 @app.route('/distribution')
@@ -108,38 +117,59 @@ def works_log():
     return render_template('works_log.html', jobs=jobs)
 
 
-class Register(FlaskForm):
-    login = StringField('Login / email', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password_repeat = PasswordField('Repeat password', validators=[DataRequired()])
-    surname = StringField('Surname', validators=[DataRequired()])
-    name = StringField('Name', validators=[DataRequired()])
-    age = StringField('Name', validators=[DataRequired()])
-    position = StringField('Speciality', validators=[DataRequired()])
-    adress = StringField('Adress', validators=[DataRequired()])
-    submit = SubmitField('Send')
-
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = Register()
-    if request.method == 'POST':
-        dct = {
-            'login': request.form['login'],
-            'password': request.form['password'],
-            'password_repeat': request.form['password_repeat'],
-            'surname': request.form['surname'],
-            'name': request.form['name'],
-            'age': request.form['age'],
-            'position': request.form['position'],
-            'adress': request.form['adress'],
-            'submit': request.form['submit']
-        }
-        if not dct["password"] == dct["password_repeat"]:
-            return "Пароли разные"
-        return "Accepted"
+    if form.validate_on_submit():
+        if not form.password.data == form.password_repeat.data:
+            return render_template('register.html', form=form, message="Пароли не совпадают")
+        db_sess = db_session.create_session()
+        if db_sess.query(User).filter(User.email == form.login.data).first():
+            return render_template('register.html', form=form,
+                                   message="Такой пользователь уже есть")
+        new_user = User(
+            surname=form.surname.data,
+            name=form.name.data,
+            email=form.login.data,
+            age=form.age.data,
+            address=form.address.data,
+            position=form.position.data,
+            speciality=form.speciality.data,
+            modified_date=datetime.datetime.now()
+        )
+        new_user.set_password(form.password.data)
+        db_sess.add(new_user)
+        db_sess.commit()
+        return redirect('/login')
     return render_template('register.html', form=form)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    db_sess = db_session.create_session()
+    return db_sess.query(User).get(user_id)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+        return render_template('login.html',
+                               message="Неправильный логин или пароль",
+                               form=form)
+    return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 if __name__ == '__main__':

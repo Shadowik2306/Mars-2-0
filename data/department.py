@@ -12,4 +12,3 @@ class Department(SqlAlchemyBase):
     chief = sqlalchemy.Column(sqlalchemy.Integer)
     members = sqlalchemy.Column(sqlalchemy.String)
     email = sqlalchemy.Column(sqlalchemy.String)
-    user = orm.relation('User')

@@ -59,6 +59,15 @@
         {% endfor %}
     </div>
     <div>
+        {{ form.speciality.label }}<br>
+        {{ form.speciality(class="form-control", id="age") }}
+        {% for error in form.age.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+    </div>
+    <div>
         {{ form.position.label }}<br>
         {{ form.position(class="form-control", id="position") }}
         {% for error in form.position.errors %}
@@ -68,15 +77,16 @@
         {% endfor %}
     </div>
     <div>
-        {{ form.adress.label }}<br>
-        {{ form.adress(class="form-control", id="adress") }}
-        {% for error in form.adress.errors %}
+        {{ form.address.label }}<br>
+        {{ form.address(class="form-control", id="adress") }}
+        {% for error in form.address.errors %}
         <div class="alert alert-danger" role="alert">
             {{ error }}
         </div>
         {% endfor %}
     </div>
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <h3>{{ message }}</h3>
 </form>
 
 {% endblock %}

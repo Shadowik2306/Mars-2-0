@@ -16,11 +16,20 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="card-header">
+    <div class="card-header" style="display: flex; justify-content: space-between;">
     	<h1>Миссия Колонизация Марса</h1>
+		{% if current_user.is_authenticated %}
+			<a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+		{% else %}
+			<p style="margin-top: 10px">
+				<a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+				<a class="btn btn-success" href="/login">Войти</a>
+			</p>
+		{% endif %}
   	</div>
-  	<div class="card-body">
-  		<h4>И на Марсе будут яблони цвести!</h4>
+  	<div class="card-body" style="margin: 10px 50px;">
+  		<h4 style="color: lightgrey">И на Марсе будут яблони цвести!</h4>
+		<br>
   		{% block content %} {% endblock %}
   	</div>
 </body>
