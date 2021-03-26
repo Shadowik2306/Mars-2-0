@@ -161,7 +161,7 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/news', methods=['GET', "POST"])
+@app.route('/jobs', methods=['GET', "POST"])
 @login_required
 def addjob():
     form = AddingJob()
@@ -180,7 +180,7 @@ def addjob():
     return render_template('addjob.html', title='Adding a job', form=form)
 
 
-@app.route('/news/<int:id>', methods=['GET', 'POST'])
+@app.route('/jobs/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit_news(id):
     form = AddingJob()
@@ -204,7 +204,7 @@ def edit_news(id):
     return render_template('addjob.html', title='Editing a job', form=form)
 
 
-@app.route('/del_news/<int:id>', methods=['GET','POST'])
+@app.route('/del_jobs/<int:id>', methods=['GET','POST'])
 @login_required
 def del_new(id):
     db_sess = db_session.create_session()

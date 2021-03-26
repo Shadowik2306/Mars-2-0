@@ -3,6 +3,9 @@
 {% block content %}
 <h1 class="text-center">Works log</h1>
 <div>
+    <a href="/news/" class="btn btn-warning">
+            Изменить
+    </a>
     {% for job in jobs %}
     <div>
         <h1>Action {{ job.id }}</h1>
