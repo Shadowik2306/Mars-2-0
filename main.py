@@ -185,7 +185,7 @@ def addjob():
 def edit_news(id):
     form = AddingJob()
     db_sess = db_session.create_session()
-    news = db_sess.query(Jobs).filter(Jobs.id == id).first()
+    news = db_sess.query(Jobs).filter(Jobs.id == id, Jobs.team_leader == current_user.id).first()
     if not news:
         return redirect('/')
     if form.validate_on_submit():
@@ -202,6 +202,19 @@ def edit_news(id):
     form.collaborators.data = news.collaborators
     form.finished.data = news.is_finished
     return render_template('addjob.html', title='Editing a job', form=form)
+
+
+@app.route('/del_news/<int:id>', methods=['GET','POST'])
+@login_required
+def del_new(id):
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).filter(Jobs.id == id, Jobs.team_leader == current_user.id).first()
+    if jobs:
+        db_sess.delete(jobs)
+        db_sess.commit()
+    return redirect('/')
+
+
 
 
 if __name__ == '__main__':
