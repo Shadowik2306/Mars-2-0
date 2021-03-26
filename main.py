@@ -203,5 +203,6 @@ def edit_news(id):
     form.finished.data = news.is_finished
     return render_template('addjob.html', title='Editing a job', form=form)
 
+
 if __name__ == '__main__':
     app.run(port=8081, host='127.0.0.1')
