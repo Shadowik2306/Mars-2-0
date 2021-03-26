@@ -185,7 +185,7 @@ def addjob():
 def edit_news(id):
     form = AddingJob()
     db_sess = db_session.create_session()
-    news = db_sess.query(Jobs).filter(Jobs.id == id, Jobs.team_leader == current_user.id).first()
+    news = db_sess.query(Jobs).filter(Jobs.id == id, (Jobs.team_leader == current_user.id | current_user.id == 1)).first()
     if not news:
         return redirect('/')
     if form.validate_on_submit():
@@ -208,13 +208,11 @@ def edit_news(id):
 @login_required
 def del_new(id):
     db_sess = db_session.create_session()
-    jobs = db_sess.query(Jobs).filter(Jobs.id == id, Jobs.team_leader == current_user.id).first()
+    jobs = db_sess.query(Jobs).filter(Jobs.id == id, (Jobs.team_leader == current_user.id | current_user.id == 1)).first()
     if jobs:
         db_sess.delete(jobs)
         db_sess.commit()
     return redirect('/')
-
-
 
 
 if __name__ == '__main__':
