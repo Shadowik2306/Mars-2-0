@@ -3,12 +3,12 @@
 {% block content %}
 <h1 class="text-center">Works log</h1>
 <div>
-    <a href="/news/" class="btn btn-warning">
+    <a href="/jobs" class="btn btn-warning">
             Изменить
     </a>
     {% for job in jobs %}
     <div>
-        <h1>Action {{ job.id }}</h1>
+        <h1>Action {{ loop.index }}</h1>
         <div>
             <table class="table">
                 <thead>
@@ -30,6 +30,16 @@
                     </tr>
                 </tbody>
             </table>
+            {% if current_user.is_authenticated and (current_user.user == job.user or current_user.id == 1) %}
+                <div>
+                    <a href="jobs/{{ loop.index }}" class="btn btn-warning">
+                        Изменить
+                    </a>
+                    <a href="del_jobs/{{ loop.index }}" class="btn btn-danger">
+                        Удалить
+                    </a>
+                </div>
+            {% endif %}
         </div>
     </div>
     {% endfor %}

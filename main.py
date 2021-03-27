@@ -115,7 +115,8 @@ def table_prof(name, age):
             color = '#FF6BEF'
         else:
             color = '#E506C2'
-    return render_template('table_param.html', color=color, name=url_for('static', filename='img/sim/male_child.jpg'))
+    return render_template('table_param.html', color=color,
+                           name=url_for('static', filename='img/sim/male_child.jpg'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -143,7 +144,6 @@ def register():
         db_sess.commit()
         return redirect('/login')
     return render_template('register.html', form=form)
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -185,7 +185,7 @@ def addjob():
 def edit_news(id):
     form = AddingJob()
     db_sess = db_session.create_session()
-    news = db_sess.query(Jobs).filter(Jobs.id == id, (Jobs.team_leader == current_user.id | current_user.id == 1)).first()
+    news = db_sess.query(Jobs).filter((Jobs.team_leader == id) | (current_user.id == 1)).first()
     if not news:
         return redirect('/')
     if form.validate_on_submit():
@@ -208,7 +208,8 @@ def edit_news(id):
 @login_required
 def del_new(id):
     db_sess = db_session.create_session()
-    jobs = db_sess.query(Jobs).filter(Jobs.id == id, (Jobs.team_leader == current_user.id | current_user.id == 1)).first()
+    jobs = db_sess.query(Jobs).filter((Jobs.team_leader == id) | (current_user.id == 1)).first()
+    print(id, current_user.id)
     if jobs:
         db_sess.delete(jobs)
         db_sess.commit()
