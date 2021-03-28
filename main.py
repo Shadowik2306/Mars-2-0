@@ -8,11 +8,13 @@ import os
 from data import db_session
 from data.users import User
 from data.job import Jobs
+from data.department import Department
 
 from forms.loginForm import LoginForm
 from forms.registrationForm import Register
 from forms.addingJob import AddingJob
 from forms.loginFormTwo import LoginFormTwo
+from forms.depart import AddingDep
 
 import datetime
 
@@ -209,9 +211,71 @@ def edit_news(id):
 def del_new(id):
     db_sess = db_session.create_session()
     jobs = db_sess.query(Jobs).filter((Jobs.team_leader == id) | (current_user.id == 1)).first()
-    print(id, current_user.id)
     if jobs:
         db_sess.delete(jobs)
+        db_sess.commit()
+    return redirect('/')
+
+
+@app.route('/depart_list', methods=['GET', 'POST'])
+@login_required
+def depart_list():
+    db_session.global_init('db/blogs.db')
+    db_sess = db_session.create_session()
+    depart = db_sess.query(Department).all()
+    return render_template('depart.html', departs=depart)
+
+
+@app.route('/depart_list_add', methods=['GET', "POST"])
+@login_required
+def depAdd():
+    form = AddingDep()
+    if form.validate_on_submit():
+        new_dep = Department(
+            chief=form.chief.data,
+            title=form.title.data,
+            members=form.members.data,
+            email=form.email.data
+        )
+        db_sess = db_session.create_session()
+        db_sess.add(new_dep)
+        db_sess.commit()
+        return redirect('/depart_list')
+
+    return render_template('add_dep.html', title='Adding a job', form=form)
+
+
+@app.route('/depart_list/<int:id>', methods=['GET', 'POST'])
+@login_required
+def depart_edit(id):
+    form = AddingDep()
+    db_sess = db_session.create_session()
+    dep = db_sess.query(Department).filter((Department.chief == id) | (current_user.id == 1)).first()
+    if not dep:
+        return redirect('/depart_list')
+    if form.validate_on_submit():
+        dep.chief = form.chief.data
+        dep.title = form.title.data
+        dep.members = form.members.data
+        dep.email = form.email.data
+        db_sess.commit()
+        return redirect('/depart_list')
+    form.title.data = dep.title
+    form.chief.data = dep.chief
+    form.members.data = dep.members
+    form.email.data = dep.email
+
+    return render_template('add_dep.html', title='Editing a job', form=form)
+
+
+
+@app.route('/del_dep/<int:id>', methods=['GET','POST'])
+@login_required
+def del_dep(id):
+    db_sess = db_session.create_session()
+    depart = db_sess.query(Department).filter((Department.chief == id) | (current_user.id == 1)).first()
+    if depart:
+        db_sess.delete(depart)
         db_sess.commit()
     return redirect('/')
 
