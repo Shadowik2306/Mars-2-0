@@ -5,7 +5,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 import os
 
-from data import db_session
+from data import db_session, job_api
 from data.users import User
 from data.job import Jobs
 from data.department import Department
@@ -15,6 +15,7 @@ from forms.registrationForm import Register
 from forms.addingJob import AddingJob
 from forms.loginFormTwo import LoginFormTwo
 from forms.depart import AddingDep
+
 
 import datetime
 
@@ -281,4 +282,5 @@ def del_dep(id):
 
 
 if __name__ == '__main__':
-    app.run(port=8081, host='127.0.0.1')
+    app.register_blueprint(job_api.blueprint)
+    app.run(port=8080, host='127.0.0.1')

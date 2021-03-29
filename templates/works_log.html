@@ -3,9 +3,14 @@
 {% block content %}
 <h1 class="text-center">Works log</h1>
 <div>
-    <a href="/jobs" class="btn btn-warning">
-            Добавить работу
-    </a>
+    <div style="display: flex; justify-content: space-evenly;">
+        <a href="/jobs" class="btn btn-warning">
+                Добавить работу
+        </a>
+        <a href="/depart_list" class="btn btn-warning">
+                Департамент
+        </a>
+    </div>
     {% for job in jobs %}
     <div>
         <h1>Action {{ loop.index }}</h1>
