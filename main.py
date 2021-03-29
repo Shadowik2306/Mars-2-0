@@ -1,4 +1,4 @@
-from flask import Flask, url_for, render_template, redirect, request
+from flask import Flask, url_for, render_template, redirect, request, jsonify, make_response
 from flask_wtf import FlaskForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from wtforms import StringField, PasswordField, SubmitField
@@ -26,6 +26,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 db_session.global_init('db/blogs.db')
 
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'})), 404
 
 @login_manager.user_loader
 def load_user(user_id):
