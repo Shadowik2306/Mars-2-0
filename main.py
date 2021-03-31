@@ -1,9 +1,5 @@
 from flask import Flask, url_for, render_template, redirect, request, jsonify, make_response
-from flask_wtf import FlaskForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired
-import os
 
 from data import db_session, job_api
 from data.users import User
@@ -47,6 +43,7 @@ def logout():
 def works_log():
     if not current_user.is_authenticated:
         return render_template('base.html')
+    print(1)
     db_session.global_init('db/blogs.db')
     db_sess = db_session.create_session()
     jobs = db_sess.query(Jobs).all()
@@ -286,4 +283,4 @@ def del_dep(id):
 
 if __name__ == '__main__':
     app.register_blueprint(job_api.blueprint)
-    app.run(port=8080, host='127.0.0.1')
+    app.run(port=8082, host='127.0.0.1')
