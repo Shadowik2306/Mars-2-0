@@ -271,7 +271,6 @@ def depart_edit(id):
     return render_template('add_dep.html', title='Editing a job', form=form)
 
 
-
 @app.route('/del_dep/<int:id>', methods=['GET','POST'])
 @login_required
 def del_dep(id):
@@ -281,6 +280,12 @@ def del_dep(id):
         db_sess.delete(depart)
         db_sess.commit()
     return redirect('/')
+
+
+@app.route('/nostalgy', methods=['GET'])
+@login_required
+def nostalgy():
+    return render_template('nostalgy.html')
 
 
 if __name__ == '__main__':
