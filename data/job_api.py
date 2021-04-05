@@ -61,3 +61,15 @@ def create_news():
     db_sess.commit()
 
     return jsonify({'success': 'Ok'})
+
+
+@blueprint.route('/api/jobs/<int:id>', methods=['DELETE'])
+def del_jos(id):
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).get(id)
+    if not jobs:
+        return jsonify({'error': 'Not found'})
+    db_sess.delete(jobs)
+    db_sess.commit()
+    return jsonify({'success': 'OK'})
+
