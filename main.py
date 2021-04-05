@@ -1,7 +1,7 @@
 from flask import Flask, url_for, render_template, redirect, request, jsonify, make_response
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from data import db_session, job_api
+from data import db_session, job_api, user_api
 from data.users import User
 from data.job import Jobs
 from data.department import Department
@@ -285,4 +285,5 @@ def del_dep(id):
 
 if __name__ == '__main__':
     app.register_blueprint(job_api.blueprint)
+    app.register_blueprint(user_api.blueprint)
     app.run(port=8082, host='127.0.0.1')

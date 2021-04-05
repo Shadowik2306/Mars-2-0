@@ -15,6 +15,7 @@ blueprint = flask.Blueprint(
     template_folder='templates'
 )
 
+
 @blueprint.route('/api/jobs')
 def get_job():
     db_sess = db_session.create_session()
