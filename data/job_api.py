@@ -73,3 +73,44 @@ def del_jos(id):
     db_sess.commit()
     return jsonify({'success': 'OK'})
 
+
+@blueprint.route('/api/jobs/<int:id>', methods=['PUT'])
+def change_job(id):
+    db_sess = db_session.create_session()
+    jobs = db_sess.query(Jobs).get(id)
+    if not jobs:
+        return jsonify({'error': 'Not found'})
+    try:
+        jobs.job = request.json['job']
+    except Exception:
+        pass
+    try:
+        jobs.team_leader = request.json['team_leader']
+    except Exception:
+        pass
+    try:
+        jobs.work_size = request.json['work_size']
+    except Exception:
+        pass
+    try:
+        jobs.collaborators = request.json['collaborators']
+    except Exception:
+        pass
+    try:
+        jobs.start_date = request.json['start_date']
+    except Exception:
+        pass
+    try:
+        jobs.end_date = request.json['end_date']
+    except Exception:
+        pass
+    try:
+        jobs.is_finished = request.json['is_finished']
+    except Exception:
+        pass
+    db_sess.commit()
+    return jsonify({'success': 'OK'})
+
+
+
+
