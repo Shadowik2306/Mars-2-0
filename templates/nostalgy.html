@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="center">
+    <div class="center" style="text-align: center">
         <h1>Nostalgy</h1>
+        <h1>{{ current_user.name }} {{current_user.surname}}</h1>
+        <img src="static/nostalgy/nostalgy_{{ current_user.email }}.jpg">
     </div>
 {% endblock %}

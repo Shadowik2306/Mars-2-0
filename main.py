@@ -1,4 +1,4 @@
-from flask import Flask, url_for, render_template, redirect, request, jsonify, make_response
+from flask import Flask, url_for, render_template, redirect, jsonify, make_response, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 from data import db_session, job_api, user_api
@@ -12,9 +12,9 @@ from forms.addingJob import AddingJob
 from forms.loginFormTwo import LoginFormTwo
 from forms.depart import AddingDep
 
-
 import datetime
 
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -285,6 +285,29 @@ def del_dep(id):
 @app.route('/nostalgy', methods=['GET'])
 @login_required
 def nostalgy():
+    geocoder_request = "http://geocode-maps.yandex.ru/1.x/"
+    geocoder_params = {
+        "apikey": "40d1649f-0493-4b70-98ba-98533de7710b",
+        "geocode": current_user.address,
+        "format": 'json'
+    }
+    response = requests.get(geocoder_request, params=geocoder_params)
+    if not response:
+        abort(404)
+    json_response = response.json()
+    toponym = json_response["response"]["GeoObjectCollection"][
+    "featureMember"][0]["GeoObject"]
+    toponym_cords = toponym["Point"]["pos"]
+    toponym_longitude, toponym_lattitude = toponym_cords.split(" ")
+    address_ll = toponym_longitude + ',' + toponym_lattitude
+    map_api_server = "http://static-maps.yandex.ru/1.x/"
+    map_params = {
+        "ll": address_ll,
+        "l": "map",
+    }
+    response = requests.get(map_api_server, params=map_params)
+    with open(f'static/nostalgy/nostalgy_{current_user.email}.jpg', 'wb') as fd:
+        fd.write(response.content)
     return render_template('nostalgy.html')
 
 
