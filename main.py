@@ -1,7 +1,8 @@
 from flask import Flask, url_for, render_template, redirect, jsonify, make_response, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from data import db_session, job_api, user_api
+from data import db_session, job_api, user_api, users_resource
+from data.users_resource import *
 from data.users import User
 from data.job import Jobs
 from data.department import Department
@@ -21,6 +22,8 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 db_session.global_init('db/blogs.db')
+app = Flask(__name__)
+api = Api(app)
 
 
 @app.errorhandler(404)
@@ -314,4 +317,6 @@ def nostalgy():
 if __name__ == '__main__':
     app.register_blueprint(job_api.blueprint)
     app.register_blueprint(user_api.blueprint)
+    api.add_resource(users_resource.UsersListResource, '/api/v2/users')
+    api.add_resource(users_resource.UserResource, '/api/v2/users/<int:news_id>')
     app.run(port=8082, host='127.0.0.1')
