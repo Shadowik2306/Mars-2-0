@@ -14,7 +14,7 @@ from forms.loginFormTwo import LoginFormTwo
 from forms.depart import AddingDep
 
 import datetime
-
+import os
 import requests
 
 
@@ -23,7 +23,6 @@ app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
 db_session.global_init('db/blogs.db')
-app = Flask(__name__)
 api = Api(app)
 
 
@@ -313,6 +312,12 @@ def nostalgy():
     with open(f'static/nostalgy/nostalgy_{current_user.email}.jpg', 'wb') as fd:
         fd.write(response.content)
     return render_template('nostalgy.html')
+
+
+@app.route('/galery', methods=['GET', 'POST'])
+def galery():
+    lst = ['static/img/galery/' + i for i in os.listdir('static/img/galery')]
+    return render_template('galery.html', lst=lst)
 
 
 if __name__ == '__main__':
