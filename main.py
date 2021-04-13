@@ -169,7 +169,7 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
-@app.route('/jobs', methods=['GET', "POST"])
+@app.route('/news', methods=['GET', "POST"])
 @login_required
 def addjob():
     form = AddingJob()
@@ -318,5 +318,5 @@ if __name__ == '__main__':
     app.register_blueprint(job_api.blueprint)
     app.register_blueprint(user_api.blueprint)
     api.add_resource(users_resource.UsersListResource, '/api/v2/users')
-    api.add_resource(users_resource.UserResource, '/api/v2/users/<int:news_id>')
+    api.add_resource(users_resource.UserResource, '/api/v2/users/<int:users_id>')
     app.run(port=8082, host='127.0.0.1')

@@ -63,7 +63,7 @@ class UsersListResource(Resource):
             speciality=args['speciality'],
             address=args['address'],
             email=args['email'],
-            hashed_password=generate_password_hash(args['hashed_password']),
+            hashed_password=(args['hashed_password']),
             modified_date = datetime.now()
         )
         session.add(news)

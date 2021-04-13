@@ -3,46 +3,33 @@
 {% block content %}
 <h1 class="text-center">Works log</h1>
 <div>
-    <div style="display: flex; justify-content: space-evenly;">
-        <a href="/jobs" class="btn btn-warning">
-                Добавить работу
-        </a>
-        <a href="/depart_list" class="btn btn-warning">
-                Департамент
-        </a>
-    </div>
+    <a href="/news/" class="btn btn-warning">
+            Изменить
+    </a>
     {% for job in jobs %}
     <div>
-        <h1>Action {{ loop.index }}</h1>
+        <h1>Action {{ job.id }}</h1>
         <div>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Название департаментна</th>
+                        <th>Название работы</th>
                         <th>фамилия и имя ответственного</th>
+                        <th>продолжительность в часах</th>
                         <th>список id команды</th>
-                        <th>Завершен</th>
+                        <th>завершена или нет</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <th>{{ job.job }}</th>
                         <th>{{ job.user.surname }} {{ job.user.name }}</th>
+                        <th>{{ job.work_size }} hours</th>
                         <th>{{ job.collaborators }}</th>
                         <th>{{ job.is_finished }}</th>
                     </tr>
                 </tbody>
             </table>
-            {% if current_user.is_authenticated and (current_user.user == job.user or current_user.id == 1) %}
-                <div>
-                    <a href="jobs/{{ loop.index }}" class="btn btn-warning">
-                        Изменить
-                    </a>
-                    <a href="del_jobs/{{ loop.index }}" class="btn btn-danger">
-                        Удалить
-                    </a>
-                </div>
-            {% endif %}
         </div>
     </div>
     {% endfor %}
