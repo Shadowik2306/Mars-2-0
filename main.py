@@ -16,6 +16,7 @@ from forms.depart import AddingDep
 import datetime
 import os
 import requests
+import random
 
 
 app = Flask(__name__)
@@ -318,6 +319,13 @@ def nostalgy():
 def galery():
     lst = ['static/img/galery/' + i for i in os.listdir('static/img/galery')]
     return render_template('galery.html', lst=lst)
+
+
+@login_required
+@app.route('/member')
+def member():
+    lst = ['static/img/galery/' + i for i in os.listdir('static/img/galery')]
+    return render_template('member.html', jpg=random.choice(lst))
 
 
 if __name__ == '__main__':

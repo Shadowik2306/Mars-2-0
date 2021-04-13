@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="text-center">{{ current_user.name }} {{ current_user.surname }}</h1>
+    <img src="{{ jpg }}">
+    <h3>{{ current_user.position }}</h3>
+
+{% endblock %}
