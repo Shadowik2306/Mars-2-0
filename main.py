@@ -1,7 +1,7 @@
 from flask import Flask, url_for, render_template, redirect, jsonify, make_response, abort
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
-from data import db_session, job_api, user_api, users_resource
+from data import db_session, job_api, user_api, users_resource, jobs_resource
 from data.users_resource import *
 from data.users import User
 from data.job import Jobs
@@ -16,6 +16,7 @@ from forms.depart import AddingDep
 import datetime
 
 import requests
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -319,4 +320,6 @@ if __name__ == '__main__':
     app.register_blueprint(user_api.blueprint)
     api.add_resource(users_resource.UsersListResource, '/api/v2/users')
     api.add_resource(users_resource.UserResource, '/api/v2/users/<int:users_id>')
-    app.run(port=8082, host='127.0.0.1')
+    api.add_resource(jobs_resource.JobResource, '/api/v2/jobs/<int:jobs_id>')
+    api.add_resource(jobs_resource.JobsListResource, '/api/v2/jobs')
+    app.run(port=8080, host='127.0.0.1')

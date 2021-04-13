@@ -19,14 +19,13 @@ def abort_if_user_not_found(user_id):
 
 parser = reqparse.RequestParser()
 parser.add_argument('surname', required=True)
-parser.add_argument('name', required=True, type=bool)
-parser.add_argument('age', required=True, type=bool)
+parser.add_argument('name', required=True)
+parser.add_argument('age', required=True)
 parser.add_argument('position', required=True, type=int)
-parser.add_argument('speciality', required=True, type=bool)
-parser.add_argument('address', required=True, type=bool)
-parser.add_argument('email', required=True, type=bool)
-parser.add_argument('hashed_password', required=True, type=bool)
-
+parser.add_argument('speciality', required=True)
+parser.add_argument('address', required=True)
+parser.add_argument('email', required=True)
+parser.add_argument('hashed_password', required=True)
 
 class UserResource(Resource):
     def get(self, user_id):
